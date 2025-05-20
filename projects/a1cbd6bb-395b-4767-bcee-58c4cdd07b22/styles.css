@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.navbar {
+    background-color: #fff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: #333 !important;
+    margin-left: 1rem;
+}
+
+.nav-link:hover {
+    color: #007bff !important;
+}
+
+#menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+#menu li {
+    margin-bottom: 0.5rem;
+}
+
+#reservations form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#specials .card {
+    margin-bottom: 2rem;
+}
+
+#testimonials .card {
+    margin-bottom: 2rem;
+}
+
+#gallery img {
+    margin-bottom: 1rem;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}

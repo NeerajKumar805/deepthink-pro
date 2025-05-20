@@ -1,0 +1,53 @@
+body {
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+#emailVerification, #profileSetup {
+    display: none;
+}
+
+/* Responsive Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Additional Images (hidden by default, but available) */
+.hidden-image {
+  display: none;
+}
+
+/* Example of how to use a background image */
+.card-body {
+    /* Example background image */
+    /* background-image: url('https://via.placeholder.com/50'); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
+}

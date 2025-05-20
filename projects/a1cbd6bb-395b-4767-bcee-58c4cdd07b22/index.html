@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Delights Restaurant</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Delicious Delights</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+                <li class="nav-item"><a class="nav-link" href="#reservations">Reservations</a></li>
+                <li class="nav-item"><a class="nav-link" href="#specials">Specials</a></li>
+                <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="jumbotron jumbotron-fluid">
+        <div class="container text-center">
+            <h1>Welcome to Delicious Delights</h1>
+            <p>Experience the finest cuisine in town.</p>
+        </div>
+    </header>
+
+    <section id="menu" class="container py-5">
+        <h2>Menu</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Appetizers</h3>
+                <ul>
+                    <li>Bruschetta <img src="https://via.placeholder.com/50" alt="Bruschetta"></li>
+                    <li>Calamari <img src="https://via.placeholder.com/50" alt="Calamari"></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Main Courses</h3>
+                <ul>
+                    <li>Steak <img src="https://via.placeholder.com/50" alt="Steak"></li>
+                    <li>Pasta <img src="https://via.placeholder.com/50" alt="Pasta"></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Desserts</h3>
+                <ul>
+                    <li>Tiramisu <img src="https://via.placeholder.com/50" alt="Tiramisu"></li>
+                    <li>Ice Cream <img src="https://via.placeholder.com/50" alt="Ice Cream"></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservations" class="container py-5">
+        <h2>Reservations</h2>
+        <form>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Time:</label>
+                <input type="time" class="form-control" id="time" required>
+            </div>
+            <div class="form-group">
+                <label for="guests">Number of Guests:</label>
+                <input type="number" class="form-control" id="guests" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Book Now</button>
+        </form>
+    </section>
+
+    <section id="specials" class="container py-5">
+        <h2>Chef's Specials</h2>
+        <div class="card">
+            <img src="https://via.placeholder.com/300" class="card-img-top" alt="Special Dish">
+            <div class="card-body">
+                <h5 class="card-title">Special Dish Name</h5>
+                <p class="card-text">Description of the special dish.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="container py-5">
+        <h2>Customer Testimonials</h2>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">"Great food and excellent service!"</p>
+                <footer class="blockquote-footer">John Doe</footer>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="container py-5">
+        <h2>Gallery</h2>
+        <div class="row">
+            <div class="col-md-4"><img src="https://via.placeholder.com/200" alt="Restaurant Image" class="img-fluid"></div>
+            <div class="col-md-4"><img src="https://via.placeholder.com/200" alt="Restaurant Image" class="img-fluid"></div>
+            <div class="col-md-4"><img src="https://via.placeholder.com/200" alt="Restaurant Image" class="img-fluid"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="container py-5">
+        <h2>Contact Us</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Location</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.0604149473716!2d-73.98570828453907!3d40.74844047926145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b311d3dd%3A0x258e5165a5a617b2!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1698798765432!5m2!1sen!2sus" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="col-md-6">
+                <h3>Opening Hours</h3>
+                <p>Monday-Friday: 9am - 10pm</p>
+                <p>Saturday: 10am - 11pm</p>
+                <p>Sunday: 10am - 9pm</p>
+                <h3>Contact Info</h3>
+                <p>Address: 123 Main Street, Anytown</p>
+                <p>Phone: (123) 456-7890</p>
+                <p>Email: info@deliciousdelights.com</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-3">
+        &copy; 2023 Delicious Delights Restaurant
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>

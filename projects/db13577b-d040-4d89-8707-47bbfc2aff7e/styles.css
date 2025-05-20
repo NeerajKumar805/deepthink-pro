@@ -1,0 +1,13 @@
+body {
+    font-family: sans-serif;
+}
+
+.jumbotron {
+    background-color: #f8f9fa;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+}

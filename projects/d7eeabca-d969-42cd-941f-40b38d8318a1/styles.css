@@ -1,0 +1,29 @@
+body {
+    font-family: sans-serif;
+}
+
+.navbar {
+    background-color: #f8f9fa !important;
+}
+
+#about {
+    padding: 20px;
+}
+
+#skills {
+    padding: 20px;
+}
+
+#projects {
+    padding: 20px;
+}
+
+#contact {
+    padding: 20px;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+}

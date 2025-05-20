@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 200px; /* Adjust as needed */
+}
+
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .col-md-8, .col-md-4 {
+        margin-bottom: 15px;
+    }
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    .navbar-nav {
+        text-align: center;
+    }
+    .form-inline {
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Website Generator</title>
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root { 
+      --transition: 0.3s; 
+      --header-bg: #ffffff; 
+      --background: #f3f4f6; 
+      --text: #1f2937; 
+      --secondary: #6b7280; 
+      --card-bg: #ffffff; 
+      --border: rgba(0,0,0,0.1); 
+      --btn-primary-bg: #2563eb;
+      --btn-primary-text: #ffffff;
+      --btn-primary-hover: #1d4ed8;
+      --btn-secondary-bg: #16a34a;
+      --btn-secondary-text: #ffffff;
+      --btn-secondary-hover: #15803d;
+      --btn-warning-bg: #d97706;
+      --btn-warning-text: #ffffff;
+      --btn-warning-hover: #b45309;
+      --btn-neutral-bg: #4b5563;
+      --btn-neutral-text: #ffffff;
+      --btn-neutral-hover: #374151;
+    }
+    [data-theme="dark"] { 
+      --header-bg: #1f2937; 
+      --background: #111827; 
+      --text: #f3f4f6; 
+      --secondary: #9ca3af; 
+      --card-bg: #374151; 
+      --border: rgba(255,255,255,0.1); 
+      --btn-primary-bg: #60a5fa;
+      --btn-primary-text: #000000;
+      --btn-primary-hover: #3b82f6;
+      --btn-secondary-bg: #4ade80;
+      --btn-secondary-text: #000000;
+      --btn-secondary-hover: #22c55e;
+      --btn-warning-bg: #f59e0b;
+      --btn-warning-text: #000000;
+      --btn-warning-hover: #d97706;
+      --btn-neutral-bg: #6b7280;
+      --btn-neutral-text: #000000;
+      --btn-neutral-hover: #4b5563;
+    }
+
+    * { transition: background var(--transition), color var(--transition); }
+    body { background: var(--background); color: var(--text); }
+
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--header-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+
+    .header-controls { display: flex; align-items: center; gap: 1rem; }
+    .header-controls button, .header-controls a { display: flex; align-items: center; font-size: 1rem; color: var(--secondary); padding: 0.25rem; }
+    .header-controls button:hover, .header-controls a:hover { color: var(--text); }
+    .header-controls i { line-height: 1; }
+
+    .char-counter { font-size: 0.875rem; color: var(--secondary); }
+    .char-counter.warning { color: #f59e0b; } /* Orange for warning */
+    .char-counter.over-limit { color: #ef4444; } /* Red for over limit */
+    #sitePrompt { background: var(--card-bg) !important; color: var(--text) !important;}
+
+    .fullscreen #previewContainer {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+    .fullscreen #previewContainer .preview-iframe {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .bg-white { background: var(--card-bg) !important; }
+    .border-gray-300 { border-color: var(--border) !important; }
+
+    .preview-iframe { background: var(--card-bg); width: 100%; height: 100%; border: none; border-radius: 0.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+    .preview-iframe:hover { transform: scale(1.01); }
+
+    .loading-spinner { border: 4px solid var(--card-bg); border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px; }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+
+    .animate-section { transition: opacity 0.3s ease, transform 0.3s ease; }
+    .hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+    .visible { opacity: 1; transform: translateY(0); }
+
+    .fullscreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background); z-index: 50; display: flex; flex-direction: column; padding: 1rem; }
+
+    .example-btn svg, .example-btn i { transition: transform 0.2s ease; }
+    .example-btn:hover svg, .example-btn:hover i { transform: scale(1.1); }
+
+    .btn-primary { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); }
+    .btn-primary:hover:not(:disabled) { background-color: var(--btn-primary-hover); }
+
+    .btn-secondary { background-color: var(--btn-secondary-bg); color: var(--btn-secondary-text); }
+    .btn-secondary:hover:not(:disabled) { background-color: var(--btn-secondary-hover); }
+
+    .btn-warning { background-color: var(--btn-warning-bg); color: var(--btn-warning-text); }
+    .btn-warning:hover:not(:disabled) { background-color: var(--btn-warning-hover); }
+
+    .btn-neutral { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); }
+    .btn-neutral:hover:not(:disabled) { background-color: var(--btn-neutral-hover); }
+
+    .notification { position: fixed; bottom: 1rem; right: 1rem; background: #ef4444; color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="font-sans">
+  <div class="mx-auto">
+    <header>
+      <h1 class="flex items-center">
+        <img src="./chatbot-logo.jpg" width="40" alt="Deepthink Logo" class="rounded-full">
+        <a href="index.html" class="ml-2 font-semibold">Deepthink</a>
+      </h1>
+      <div class="header-controls">
+        <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        <a href="index.html" aria-label="Home" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </header>    
+
+    <!-- Prompt Input Section -->
+    <section id="inputSection" class="mb-12 animate-section visible">
+      <div class="bg-white p-6 rounded-lg shadow-lg animate-fadeIn" style="animation-delay: 0.4s;">
+        <label for="sitePrompt" class="block text-lg font-medium mb-2">
+          What would you like to create?
+        </label>
+        <textarea
+          id="sitePrompt"
+          class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows="4"
+          placeholder="A beautiful landing page..."
+        ></textarea>
+        <p id="charCount" class="char-counter">0/500 characters</p>
+        <button
+          id="generateBtn"
+          class="mt-4 w-full md:w-auto px-6 py-3 btn-primary font-semibold rounded-lg transition-colors duration-300"
+        >
+          Generate Website
+        </button>
+      </div>
+    </section>
+
+    <!-- Example Templates Section -->
+    <section id="examplesSection" class="mb-8 mx-8 text-center">
+      <h2 class="text-2xl font-semibold mb-4">Example Templates</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="User registration form with username, email, password, confirm password, phone; plus email verification step, profile setup section, privacy policy link, and terms checkbox.">
+          <i class="fas fa-user w-6 h-6 mr-2"></i>
+          User Registration Form
+        </button>
+
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="A simple portfolio for fresher with hero section, about section, skills section, projects grid, education timeline, contact form, and social media links.">
+          <i class="fas fa-briefcase w-6 h-6 mr-2"></i>
+          Personal Portfolio
+        </button>
+
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="E-commerce landing with hero banner, featured products, new arrivals section, customer reviews, newsletter signup, FAQs accordion, promo countdown, and footer with payment logos.">
+          <i class="fas fa-shopping-cart w-6 h-6 mr-2"></i>
+          Ecommerce Landing Page
+        </button>
+
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="Blog site with homepage posts list, category menu, search bar, latest posts widget, individual post in a modal, author bio section, newsletter section, comments area, and footer with archive links.">
+          <i class="fas fa-blog w-6 h-6 mr-2"></i>
+          Blog Website
+        </button>
+
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="Restaurant site with menu by category, reservation form, chef specials section, customer testimonials, gallery section, Indian location map, opening hours, and contact info.">
+          <i class="fas fa-utensils w-6 h-6 mr-2"></i>
+          Restaurant Website
+        </button>
+
+        <button class="example-btn bg-white p-4 rounded-lg shadow hover:bg-gray-100 flex items-center"
+                data-prompt="Photography portfolio with hero gallery, portfolio grid, project detail modals, services section, client testimonials, about photographer, contact form, and social feed.">
+          <i class="fas fa-camera w-6 h-6 mr-2"></i>
+          Photography Portfolio
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Preview Section -->
+    <section id="previewSection" class="flex flex-col relative animate-section hidden">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <button id="editBtn" class="px-2 py-1 btn-warning rounded transition">
+            Edit Your Requirement
+          </button>
+          <button id="downloadBtn" class="px-2 py-1 btn-secondary rounded transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Download ZIP
+          </button>
+          <button id="regenerateBtn" class="px-2 py-1 btn-neutral rounded transition">
+            Regenerate <span class="spinner hidden"></span>
+          </button>
+          <button id="newTabBtn" class="px-2 py-1 btn-primary rounded transition">
+            See Preview in New Tab
+          </button>
+        </div>
+      </div>
+    
+      <div id="previewContainer" class="bg-white p-4 rounded-lg shadow-lg animate-fadeIn" style="animation-delay: 0.2s;">
+        <iframe id="livePreview" class="preview-iframe"></iframe>
+      </div>
+    </section>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="loading-spinner"></div>
+    <p class="text-white mt-4">Generating your website...</p>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification hidden">
+    <p id="notificationMessage"></p>
+    <button id="closeNotification" class="ml-2 text-white">Close</button>
+  </div>
+
+  <script>
+    const sitePrompt        = document.getElementById('sitePrompt');
+    const generateBtn       = document.getElementById('generateBtn');
+    const regenerateBtn     = document.getElementById('regenerateBtn');
+    const editBtn           = document.getElementById('editBtn');
+    const downloadBtn       = document.getElementById('downloadBtn');
+    const previewSection    = document.getElementById('previewSection');
+    const inputSection      = document.getElementById('inputSection');
+    const previewContainer  = document.getElementById('previewContainer');
+    const livePreview       = document.getElementById('livePreview');
+    const loadingOverlay    = document.getElementById('loadingOverlay');
+    const notification      = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const closeNotification = document.getElementById('closeNotification');
+    const charCount         = document.getElementById('charCount');
+    const newTabBtn         = document.getElementById('newTabBtn');
+
+    let lastPrompt = '';
+    let currentBlobUrl;
+    const loaderMessages = [
+      "Analyzing your request...",
+      "Designing the layout...",
+      "Adding final touches...",
+      "Almost there..."
+    ];
+    let messageIndex = 0;
+    let messageInterval;
+
+    // Character counter
+    sitePrompt.addEventListener('input', () => {
+      const length = sitePrompt.value.length;
+      charCount.textContent = `${length}/500 characters`;
+      if (length > 450) {
+        charCount.classList.add('warning');
+      } else {
+        charCount.classList.remove('warning');
+      }
+      charCount.classList.toggle('over-limit', length > 500);
+    });
+
+    // Close notification
+    closeNotification.addEventListener('click', () => {
+      notification.classList.add('hidden');
+    });
+
+    // Start cycling loader messages
+    function startLoaderMessages() {
+      const messageElement = loadingOverlay.querySelector('p');
+      messageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % loaderMessages.length;
+        messageElement.textContent = loaderMessages[messageIndex];
+      }, 3000); // Change every 3 seconds
+    }
+
+    // Stop cycling loader messages
+    function stopLoaderMessages() {
+      clearInterval(messageInterval);
+    }
+
+    // Show/hide sections with transitions
+    function showSection(section) {
+      section.classList.remove('hidden');
+      section.classList.add('visible');
+    }
+
+    function hideSection(section) {
+      section.classList.remove('visible');
+      section.classList.add('hidden');
+    }
+
+    // Generate website function with retry mechanism
+    async function generateWebsite() {
+      const prompt = sitePrompt.value.trim();
+      if (!prompt) {
+        showNotification('Please describe your website.');
+        return;
+      }
+
+      lastPrompt = prompt;
+
+      loadingOverlay.classList.remove('hidden');
+      startLoaderMessages();
+
+      generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      regenerateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      generateBtn.disabled = regenerateBtn.disabled = true;
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const response = await fetch('http://192.168.29.204:9990/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to generate website. Server error.');
+          }
+
+          const data = await response.json();
+
+          if (currentBlobUrl) {
+            URL.revokeObjectURL(currentBlobUrl);
+          }
+
+          const blob = new Blob([data.indexHtml], { type: 'text/html' });
+          currentBlobUrl = URL.createObjectURL(blob);
+          livePreview.src = currentBlobUrl;
+
+          hideSection(inputSection);
+          showSection(previewSection);
+          previewSection.classList.add('fullscreen');
+
+          downloadBtn.disabled = false;
+          downloadBtn.onclick = () => {
+            window.open(`http://192.168.29.204:9990/api/projects/${data.projectId}.zip`, '_blank');
+          };
+
+          break; // Success, exit the loop
+        } catch (err) {
+          if (attempt < 3 && err instanceof SyntaxError) {
+            console.log(`Attempt ${attempt} failed: Invalid JSON. Retrying...`);
+          } else {
+            showNotification(err instanceof SyntaxError 
+              ? 'Failed to generate website after multiple attempts. Please try a simpler prompt.' 
+              : 'An error occurred: ' + err.message);
+            break;
+          }
+        }
+      }
+
+      loadingOverlay.classList.add('hidden');
+      stopLoaderMessages();
+      generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      regenerateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      generateBtn.disabled = regenerateBtn.disabled = false;
+    }
+
+    // Restore input section
+    function restoreInput() {
+      previewSection.classList.remove('fullscreen');
+      hideSection(previewSection);
+      showSection(inputSection);
+      sitePrompt.value = lastPrompt;
+      sitePrompt.dispatchEvent(new Event('input'));
+    }
+
+    // Show notification
+    function showNotification(message) {
+      notificationMessage.textContent = message;
+      notification.classList.remove('hidden');
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 5000);
+    }
+
+    // Example template buttons
+    document.querySelectorAll('.example-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const examplePrompt = button.getAttribute('data-prompt');
+        sitePrompt.value = examplePrompt;
+        sitePrompt.dispatchEvent(new Event('input'));
+      });
+    });
+
+    // Button event listeners
+    generateBtn.addEventListener('click', generateWebsite);
+    regenerateBtn.addEventListener('click', async () => {
+      const spinner = regenerateBtn.querySelector('.spinner');
+      spinner.classList.remove('hidden');
+      regenerateBtn.disabled = true;
+      await generateWebsite();
+      spinner.classList.add('hidden');
+      regenerateBtn.disabled = false;
+    });
+    editBtn.addEventListener('click', restoreInput);
+    newTabBtn.addEventListener('click', () => {
+      if (currentBlobUrl) window.open(currentBlobUrl, '_blank');
+    });
+
+    // Theme toggle logic
+    (function() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('theme-toggle');
+      const icon = btn.querySelector('i');
+
+      // Initialize from saved preference
+      const saved = localStorage.getItem('theme');
+      if (saved) html.setAttribute('data-theme', saved);
+
+      // Update icon based on theme
+      const setIcon = () => {
+        if (html.getAttribute('data-theme') === 'dark') {
+          icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+          icon.classList.replace('fa-sun', 'fa-moon');
+        }
+      };
+      setIcon();
+
+      // Toggle on click, persist choice
+      btn.addEventListener('click', () => {
+        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        setIcon();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+	<title>Simple Chatbot</title>
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<!-- Highlight.js for code -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
+	<!-- Font Awesome -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+	<style>
+	    body {
+	      transition: background-color 0.3s, color 0.3s;
+	    }
+	    .dark-mode {
+	      background-color: #1a1a1a;
+	      color: #e1e1e1;
+	    }
+	    .light-mode {
+	      background-color: #f8f9fa;
+	      color: #212529;
+	    }
+	    .chat-wrapper {
+	      position: relative;        /* for the scroll button */
+	      width: 100%;
+	      margin: 20px auto;
+	      display: flex;
+	      flex-direction: column;
+	      height: 88vh;
+	      border-radius: 10px;
+	      overflow: hidden;
+	      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	    }
+	    .messages {
+	      flex: 1;
+	      overflow-y: auto;
+	      padding: 10px;
+	      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+	    }
+	    .dark-mode .messages {
+	      background: linear-gradient(135deg, #2c3e50, #4b6584);
+	    }
+	    .message {
+	      display: flex;
+	      margin-bottom: 16px;
+	      animation: fadeIn 0.25s ease-in;
+	    }
+	    .message.user { justify-content: flex-end; }
+	    .message.ai   { justify-content: flex-start; }
+	    .avatar {
+	      width: 36px;
+	      height: 36px;
+	      flex-shrink: 0;
+	      border-radius: 50%;
+	      background-color: #ddd;
+	      display: flex;
+	      align-items: center;
+	      justify-content: center;
+	      margin: 0 8px;
+	    }
+	    .avatar.ai   { background-color: #6c757d; color: #fff; }
+	    .avatar.user { background-color: #007bff;  color: #fff; }
+	    .bubble {
+	      max-width: 75%;
+	      padding: 12px 16px;
+	      border-radius: 12px;
+	      position: relative;
+	      background-color: #fff;
+	      color: #000;
+	      word-break: break-word;
+	    }
+	    .message.user .bubble {
+	      background-color: #fff; color: #1a1a1a;
+	    }
+	    .dark-mode .message.ai .bubble,
+	    .dark-mode .message.user .bubble {
+	      background-color: #1a1a1a; color: #fff;
+	    }
+	    .timestamp {
+	      font-size: 0.75rem;
+	      margin-top: 4px;
+	      text-align: right;
+	      opacity: 0.6;
+	    }
+	    @keyframes fadeIn {
+	      from { opacity: 0; transform: translateY(8px); }
+	      to   { opacity: 1; transform: translateY(0); }
+	    }
+	    .input-area {
+	      border-top: 1px solid #ccc;
+	      padding: 12px;
+	      display: flex;
+	      gap: 8px;
+	      background: #fff;
+	    }
+	    .dark-mode .input-area {
+	      background: #2b2b2b;
+	    }
+	    .theme-toggle { cursor: pointer; }
+	    pre { position: relative; }
+	    .copy-btn {
+	      position: absolute;
+	      top: 8px;
+	      right: 8px;
+	      font-size: 0.85rem;
+	      cursor: pointer;
+	      opacity: 0.6;
+	    }
+	    .copy-btn:hover { opacity: 1; }
+
+	    /* Scroll‐to‐bottom button */
+	    #scrollDownBtn {
+	      position: absolute;
+	      bottom: 80px;
+	      right: 16px;
+	      display: none;
+	      z-index: 10;
+	    }
+
+	    /* Responsive adjustments for small screens */
+	    @media (max-width: 576px) {
+	      .chat-wrapper {
+	        margin: 10px auto;
+	        height: 80vh;
+	        border-radius: 0;
+	      }
+	      .messages { padding: 5px; }
+	      .message { margin-bottom: 8px; }
+	      .bubble {
+	        padding: 8px 12px;
+	        max-width: 90%;
+	      }
+	      .input-area { padding: 8px; gap: 4px; }
+	      .avatar { display: none; }
+	      #themeToggle { font-size: 1.25rem; }
+	      .timestamp { display: none; }
+	    }
+	  </style>
+</head>
+
+<body class="light-mode">
+	<div class="container text-center my-3">
+		<i id="themeToggle" class="fas fa-moon theme-toggle" title="Toggle Theme"></i>
+	</div>
+
+	<div class="chat-wrapper">
+		<div id="messages" class="messages">
+			<!-- initial welcome -->
+			<div class="message ai">
+				<div class="avatar ai"><i class="fas fa-robot"></i></div>
+				<div class="bubble">
+					Hey, how can I help you today?
+				</div>
+				<div class="timestamp"></div>
+			</div>
+		</div>
+
+		<!-- Scroll‐to‐bottom button -->
+		<button id="scrollDownBtn" class="btn btn-sm btn-secondary" title="Jump to newest">
+			<i class="fas fa-arrow-down"></i>
+		</button>
+
+		<div class="input-area">
+			<input type="text" id="promptInput" class="form-control" placeholder="Type a message…" autocomplete="off" />
+			<button id="sendBtn" class="btn btn-primary">
+				<i class="fas fa-paper-plane"></i>
+			</button>
+		</div>
+	</div>
+
+	<!-- Dependencies -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		const md = window.markdownit({
+			html: true,
+			highlight: (str, lang) => {
+				if (lang && hljs.getLanguage(lang)) {
+					try {
+						return hljs.highlight(str, {language: lang}).value;
+					} catch { }
+				}
+				return '';
+			}
+		});
+
+		const messagesEl = document.getElementById('messages');
+		const promptInput = document.getElementById('promptInput');
+		const sendBtn = document.getElementById('sendBtn');
+		const themeToggle = document.getElementById('themeToggle');
+		const scrollBtn = document.getElementById('scrollDownBtn');
+
+		// load theme preference
+		if (localStorage.getItem('theme') === 'dark') {
+			document.body.classList.replace('light-mode', 'dark-mode');
+			themeToggle.classList.replace('fa-moon', 'fa-sun');
+		}
+
+		// toggle theme
+		themeToggle.addEventListener('click', () => {
+			if (document.body.classList.contains('dark-mode')) {
+				document.body.classList.replace('dark-mode', 'light-mode');
+				themeToggle.classList.replace('fa-sun', 'fa-moon');
+				localStorage.setItem('theme', 'light');
+			} else {
+				document.body.classList.replace('light-mode', 'dark-mode');
+				themeToggle.classList.replace('fa-moon', 'fa-sun');
+				localStorage.setItem('theme', 'dark');
+			}
+		});
+
+		// --- Auto-scroll control ---
+		let autoScroll = true;
+		messagesEl.addEventListener('scroll', () => {
+			const nearBottom = messagesEl.scrollTop + messagesEl.clientHeight
+				>= messagesEl.scrollHeight - 20;
+			if (nearBottom) {
+				autoScroll = true;
+				scrollBtn.style.display = 'none';
+			} else {
+				autoScroll = false;
+				scrollBtn.style.display = 'block';
+			}
+		});
+		scrollBtn.addEventListener('click', () => {
+			autoScroll = true;
+			messagesEl.scrollTop = messagesEl.scrollHeight;
+			scrollBtn.style.display = 'none';
+		});
+
+		// helper to add messages
+		function addMessage(role, content, streaming = false) {
+			const msg = document.createElement('div');
+			msg.classList.add('message', role);
+
+			const avatar = document.createElement('div');
+			avatar.classList.add('avatar', role);
+			avatar.innerHTML =
+				role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+			const bubble = document.createElement('div');
+			bubble.classList.add('bubble');
+			bubble.innerHTML = md.render(content);
+
+			// code-copy buttons
+			bubble.querySelectorAll('pre code').forEach(codeBlock => {
+				const btn = document.createElement('div');
+				btn.classList.add('copy-btn');
+				btn.innerHTML = '<i class="fas fa-copy"></i>';
+				btn.onclick = () => {
+					navigator.clipboard.writeText(codeBlock.textContent);
+					btn.innerHTML = '<i class="fas fa-check"></i>';
+					setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 1500);
+				};
+				codeBlock.parentNode.insertBefore(btn, codeBlock);
+			});
+
+			const timestamp = document.createElement('div');
+			timestamp.classList.add('timestamp');
+			timestamp.textContent = new Date().toLocaleTimeString([], {
+				hour: '2-digit', minute: '2-digit'
+			});
+
+			msg.append(avatar, bubble);
+			if (!streaming) msg.append(timestamp);
+			messagesEl.appendChild(msg);
+
+			if (autoScroll) {
+				messagesEl.scrollTop = messagesEl.scrollHeight;
+			}
+			return bubble;
+		}
+
+		// enable/disable input
+		function setLoading(state) {
+			promptInput.disabled = sendBtn.disabled = state;
+			sendBtn.innerHTML = state
+				? '<span class="spinner-border spinner-border-sm"></span>'
+				: '<i class="fas fa-paper-plane"></i>';
+		}
+
+		// send & stream the prompt
+		async function sendMessage() {
+			const prompt = promptInput.value.trim();
+			if (!prompt) return;
+
+			addMessage('user', prompt);
+			promptInput.value = '';
+			setLoading(true);
+
+			const aiBubble = addMessage('ai', '', true);
+			let full = '';
+
+			try {
+				const res = await fetch('http://192.168.29.204:9990/apii/v2/chat', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+					body: `prompt=${encodeURIComponent(prompt)}`
+				});
+				if (!res.body) throw new Error('Streaming not supported');
+
+				const reader = res.body.getReader();
+				const dec = new TextDecoder();
+				let done = false;
+
+				while (!done) {
+					const {value, done: dr} = await reader.read();
+					done = dr;
+					const chunk = dec.decode(value || new Uint8Array(), {stream: true});
+					full += chunk;
+					aiBubble.innerHTML = md.render(full);
+					if (autoScroll) {
+						messagesEl.scrollTop = messagesEl.scrollHeight;
+					}
+				}
+			} catch (err) {
+				aiBubble.innerHTML = '⚠️ Error: Could not fetch response.';
+				console.error(err);
+			} finally {
+				const ts = document.createElement('div');
+				ts.classList.add('timestamp');
+				ts.textContent = new Date().toLocaleTimeString([], {
+					hour: '2-digit', minute: '2-digit'
+				});
+				aiBubble.parentNode.append(ts);
+				setLoading(false);
+			}
+		}
+
+		sendBtn.addEventListener('click', sendMessage);
+		promptInput.addEventListener('keydown', e => {
+			if (e.key === 'Enter' && !e.shiftKey) {
+				e.preventDefault();
+				sendMessage();
+			}
+		});
+	</script>
+</body>
+
+</html>
