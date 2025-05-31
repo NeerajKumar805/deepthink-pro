@@ -2,6 +2,8 @@
 
 Deepthink-Pro is an AI-driven assistant designed to enhance productivity and creativity through a versatile set of tools. Built with Spring Boot, Ollama, and the Qwen Model (qwen2.5:14b), it delivers a seamless conversational experience across web and mobile platforms.
 
+![ss0](https://github.com/user-attachments/assets/ced1c0dc-a126-4c5d-9e04-b88227cd4d80)
+
 ## Features
 
 * **AI Chat Assistant**: Natural language conversations with the AI to answer questions, brainstorm ideas, and explain complex topics.
@@ -74,6 +76,23 @@ Deepthink-Pro is an AI-driven assistant designed to enhance productivity and cre
 5. **Test the API**
 
    * Use Postman or Swagger UI (`http://localhost:9990/swagger-ui.html`) to verify endpoints.
+
+## Screenshots
+
+Here are a few snapshots showcasing the interface and features:
+
+![ss0](https://github.com/user-attachments/assets/ced1c0dc-a126-4c5d-9e04-b88227cd4d80)
+![ss1](https://github.com/user-attachments/assets/5104d15a-26e0-42fb-95c7-0be986809b07)
+![ss2](https://github.com/user-attachments/assets/3771e04c-ce7d-43d8-b2cd-53510ad9be1a)
+![ss3](https://github.com/user-attachments/assets/e4fc6af5-4bcf-4cb6-9c97-8109e40a2e6e)
+![ss4](https://github.com/user-attachments/assets/65efdfb6-469e-4209-9a03-4add105b30c3)
+![ss5](https://github.com/user-attachments/assets/89a023d7-4cfe-409c-b688-c4f8eb1cba0b)
+![ss6](https://github.com/user-attachments/assets/cff52b19-ee2c-453c-9b19-fa14586feedb)
+![ss7](https://github.com/user-attachments/assets/fcaaf4f7-e57a-4c64-b555-bd2656d452b0)
+![ss8](https://github.com/user-attachments/assets/c9b1e9f7-9956-40f9-ac24-653ab7400ae0)
+![ss9](https://github.com/user-attachments/assets/2d116ca0-e7b7-42d9-9dab-a09a0efea669)
+![ss10](https://github.com/user-attachments/assets/4fa2bb09-f9f2-4276-82f6-4992bb35037e)
+
 
 ## Usage
 
