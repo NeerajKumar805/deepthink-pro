@@ -81,17 +81,29 @@ Deepthink-Pro is an AI-driven assistant designed to enhance productivity and cre
 
 Here are a few snapshots showcasing the interface and features:
 
+### Simple Chat
 ![ss0](https://github.com/user-attachments/assets/ced1c0dc-a126-4c5d-9e04-b88227cd4d80)
 ![ss1](https://github.com/user-attachments/assets/5104d15a-26e0-42fb-95c7-0be986809b07)
 ![ss2](https://github.com/user-attachments/assets/3771e04c-ce7d-43d8-b2cd-53510ad9be1a)
 ![ss3](https://github.com/user-attachments/assets/e4fc6af5-4bcf-4cb6-9c97-8109e40a2e6e)
+
+### CRUD Operation though human language 
 ![ss4](https://github.com/user-attachments/assets/65efdfb6-469e-4209-9a03-4add105b30c3)
+
+### Document Parser
 ![ss5](https://github.com/user-attachments/assets/89a023d7-4cfe-409c-b688-c4f8eb1cba0b)
 ![ss6](https://github.com/user-attachments/assets/cff52b19-ee2c-453c-9b19-fa14586feedb)
+
+### Website generatoer
 ![ss7](https://github.com/user-attachments/assets/fcaaf4f7-e57a-4c64-b555-bd2656d452b0)
 ![ss8](https://github.com/user-attachments/assets/c9b1e9f7-9956-40f9-ac24-653ab7400ae0)
 ![ss9](https://github.com/user-attachments/assets/2d116ca0-e7b7-42d9-9dab-a09a0efea669)
 ![ss10](https://github.com/user-attachments/assets/4fa2bb09-f9f2-4276-82f6-4992bb35037e)
+
+### First version (Simple)
+![ss11](https://github.com/user-attachments/assets/3e171db2-da7b-48b2-809c-c3f514aec162)
+![ss12](https://github.com/user-attachments/assets/d8e61442-ff18-4929-a89c-4b28e03080b1)
+
 
 
 ## Usage
